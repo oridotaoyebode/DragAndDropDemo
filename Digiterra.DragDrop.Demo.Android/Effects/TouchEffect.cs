@@ -40,6 +40,7 @@ namespace Digiterra.DragDrop.Demo.Droid.Effects
 
             if (touchEffect != null && view != null)
             {
+               
                 viewDictionary.Add(view, this);
 
                 formsElement = Element;

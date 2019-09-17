@@ -22,8 +22,26 @@ namespace Digiterra.DragDrop.Demo
             InitializeComponent();
             //AddFirstImage();
             this.BindingContext = new MainViewModel();
+
+            LoadSavedImages();
         }
        
+        void LoadSavedImages()
+        {
+            if (App.AppDragDictionary.Any())
+            {
+                foreach (var item in App.AppDragDictionary)
+                {
+                    TouchEffect touchEffect = new TouchEffect();
+                    touchEffect.TouchAction += OnTouchEffectAction;
+                    item.Key.Effects.Add(touchEffect);
+                    absoluteLayout.Children.Add(item.Key);
+                }
+            }
+          
+
+           
+        }
         void OnTouchEffectAction(object sender, TouchEventArgs args)
         {
             DraggableImage draggableImage = sender as DraggableImage;
@@ -35,7 +53,11 @@ namespace Digiterra.DragDrop.Demo
                     if (!dragDictionary.ContainsKey(draggableImage))
                     {
                         dragDictionary.Add(draggableImage, new DragInformation(args.Id, args.Location));
+                        if (!App.AppDragDictionary.ContainsKey(draggableImage))
+                        {
+                            App.AppDragDictionary.Add(draggableImage, new DragInformation(args.Id, args.Location));
 
+                        }
                         // Set Capture property to true
                         TouchEffect touchEffect = (TouchEffect)draggableImage.Effects.FirstOrDefault(e => e is TouchEffect);
                         touchEffect.Capture = true;
@@ -56,6 +78,7 @@ namespace Digiterra.DragDrop.Demo
                 case TouchType.Released:
                     if (dragDictionary.ContainsKey(draggableImage) && dragDictionary[draggableImage].Id == args.Id)
                     {
+                        
                         dragDictionary.Remove(draggableImage);
                     }
                     break;

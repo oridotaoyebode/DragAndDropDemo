@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Digiterra.DragDrop.Demo.Controls;
+using Digiterra.DragDrop.Demo.Effects;
+using System;
+using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -6,11 +9,12 @@ namespace Digiterra.DragDrop.Demo
 {
     public partial class App : Application
     {
+        public static Dictionary<DraggableImage, DragInformation> AppDragDictionary = new Dictionary<DraggableImage, DragInformation>();
         public App()
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new NavigationPage(new StartPage());
         }
 
         protected override void OnStart()
