@@ -7,13 +7,13 @@ namespace Digiterra.DragDrop.Demo
 {
     public class DragInformation
     {
-        public DragInformation(long id, Point point)
+        public DragInformation(string id, Point point)
         {
             Id = id;
             Point = point;
         }
 
-        public long Id { get; private set; }
+        public string Id { get; private set; }
 
         public Point Point { get; private set; }
     }

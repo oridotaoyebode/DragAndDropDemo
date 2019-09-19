@@ -19,7 +19,7 @@
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
                     <Frame CornerRadius="3" Margin="6" Padding="6">
-                        <controls:DraggableFontImage Text="{Binding}" FontSize="30" TextColor="Green" FontFamily="{StaticResource IonIcons}">
+                        <controls:DraggableFontImage HorizontalTextAlignment="Center"  VerticalTextAlignment="Center" Text="{Binding}" FontSize="40" TextColor="Green" FontFamily="{StaticResource IonIcons}">
                             <controls:DraggableFontImage.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                             </controls:DraggableFontImage.GestureRecognizers>

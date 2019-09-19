@@ -20,9 +20,18 @@ namespace Digiterra.DragDrop.Demo
             Images = new ObservableCollection<string>()
             {
                IonicIconsFont.Earth,
-               IonicIconsFont.IosAlarmOutline,
-               IonicIconsFont.IosBoltOutline,
-               IonicIconsFont.IosBriefcaseOutline
+               IonicIconsFont.IosBolt,
+               IonicIconsFont.IosCog,
+               IonicIconsFont.IosEye,
+               IonicIconsFont.IosFlame,
+               IonicIconsFont.IosGear,
+               IonicIconsFont.IosLightbulb,
+
+
+
+
+
+
             };
         }
     }

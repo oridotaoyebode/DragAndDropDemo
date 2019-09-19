@@ -16,7 +16,8 @@ namespace Digiterra.DragDrop.Demo
     public partial class MainPage : ContentPage
     {
         Dictionary<DraggableFontImage, DragInformation> dragDictionary = new Dictionary<DraggableFontImage, DragInformation>();
-
+        string guidString = string.Empty;
+        bool _savedImagesLoaded = false;
         public MainPage()
         {
             InitializeComponent();
@@ -30,6 +31,7 @@ namespace Digiterra.DragDrop.Demo
         {
             if (App.customModels.Any())
             {
+                _savedImagesLoaded = true;
                 foreach (var item in App.customModels)
                 {
                     TouchEffect touchEffect = new TouchEffect();
@@ -40,14 +42,14 @@ namespace Digiterra.DragDrop.Demo
                         FontSize = item.DraggableFontImage.FontSize,
                         TextColor = item.DraggableFontImage.TextColor,
                         Text = item.DraggableFontImage.Text,
-                        
+                        ClassId = item.DragInformation.Id
                         
                        
 
                     };
                     draggableFontImage.Effects.Add(touchEffect);
                     
-                    absoluteLayout.Children.Add(draggableFontImage);
+                    absoluteLayout.Children.Add(draggableFontImage, item.DragInformation.Point);
                 }
             }
           
@@ -57,50 +59,79 @@ namespace Digiterra.DragDrop.Demo
         void OnTouchEffectAction(object sender, TouchEventArgs args)
         {
             DraggableFontImage draggableFontImage = sender as DraggableFontImage;
+            if (!string.IsNullOrEmpty(draggableFontImage.ClassId))
+            {
+                guidString = draggableFontImage.ClassId;
 
+            }
             switch (args.Type)
             {
                 case TouchType.Pressed:
                     // Don't allow a second touch on an already touched BoxView
                     if (!dragDictionary.ContainsKey(draggableFontImage))
                     {
-                        dragDictionary.Add(draggableFontImage, new DragInformation(args.Id, args.Location));
-                        if (!App.customModels.Any(r=> r.DraggableFontImage == draggableFontImage))
-                        {
-                            //App.AppDragDictionary.Add(draggableFontImage, new DragInformation(args.Id, args.Location));
-                            App.customModels.Add(new CustomModel()
-                            {
-                                DraggableFontImage = draggableFontImage,
-                                DragInformation = new DragInformation(args.Id, args.Location)
-                            });
+                        
+                        Console.WriteLine("Pressed : Id" + args.Id);
+                       
+                        dragDictionary.Add(draggableFontImage, new DragInformation(guidString, args.Location));
 
-                        }
+                        
                         
                         // Set Capture property to true
                         TouchEffect touchEffect = (TouchEffect)draggableFontImage.Effects.FirstOrDefault(e => e is TouchEffect);
                         touchEffect.Capture = true;
+
+                        //var doesExist = App.customModels.Any() && App.customModels.Where(r => r.DragInformation.Id == guidString) != null;
+                        //if (!doesExist)
+                        //{
+                        //    App.customModels.Add(new CustomModel()
+                        //    {
+                        //        DraggableFontImage = draggableFontImage,
+                        //        DragInformation = new DragInformation(guidString, args.Location)
+                        //    });
+
+                        //}
                     }
                     break;
 
                 case TouchType.Moved:
-                    if (dragDictionary.ContainsKey(draggableFontImage) && dragDictionary[draggableFontImage].Id == args.Id)
+                    //if (App.customModels.Any() && !_savedImagesLoaded)
+                    //{
+                    //    if (!string.IsNullOrEmpty(draggableFontImage.ClassId))
+                    //    {
+                    //        guidString = draggableFontImage.ClassId;
+
+                    //    }
+                    //}
+                    if (dragDictionary.ContainsKey(draggableFontImage) && dragDictionary[draggableFontImage].Id == guidString)
                     {
                         Rectangle rect = AbsoluteLayout.GetLayoutBounds(draggableFontImage);
                         Point initialLocation = dragDictionary[draggableFontImage].Point;
+                       
+
                         rect.X += args.Location.X - initialLocation.X;
                         rect.Y += args.Location.Y - initialLocation.Y;
-                        Console.WriteLine(rect.X);
-                        Console.WriteLine(rect.Y);
+                        Console.WriteLine("Moved :  X" + rect.X);
+                        Console.WriteLine("Moved :  Y" + rect.Y);
 
-                        
+                        App.customModels.FirstOrDefault(r => r.DragInformation.Id == guidString).DragInformation = new DragInformation(guidString, new Point(rect.X, rect.Y));
                         AbsoluteLayout.SetLayoutBounds(draggableFontImage, rect);
+                       
                     }
                     break;
 
                 case TouchType.Released:
-                    if (dragDictionary.ContainsKey(draggableFontImage) && dragDictionary[draggableFontImage].Id == args.Id)
+                    //if (App.customModels.Any() && !_savedImagesLoaded)
+                    //{
+                    //    if (!string.IsNullOrEmpty(draggableFontImage.ClassId))
+                    //    {
+                    //        guidString = draggableFontImage.ClassId;
+
+                    //    }
+                    //}
+                    if (dragDictionary.ContainsKey(draggableFontImage) && dragDictionary[draggableFontImage].Id == guidString)
                     {
-                        
+
                         dragDictionary.Remove(draggableFontImage);
                     }
                     break;
@@ -112,11 +143,18 @@ namespace Digiterra.DragDrop.Demo
             var draggableImage = sender as DraggableFontImage;
             if (draggableImage != null)
             {
-                var newInstance = new DraggableFontImage() { Text = draggableImage.Text, FontFamily = draggableImage.FontFamily, FontSize = draggableImage.FontSize };
+                guidString = Guid.NewGuid().ToString();
+                var newInstance = new DraggableFontImage() { TextColor = draggableImage.TextColor, Text = draggableImage.Text, FontFamily = draggableImage.FontFamily, FontSize = draggableImage.FontSize };
                 TouchEffect touchEffect = new TouchEffect();
                 touchEffect.TouchAction += OnTouchEffectAction;
                 newInstance.Effects.Add(touchEffect);
                 absoluteLayout.Children.Add(newInstance);
+                App.customModels.Add(new CustomModel()
+                {
+                    DraggableFontImage = draggableImage,
+                    DragInformation = new DragInformation(guidString, new Point())
+                });
+
             }
         }
     }
