@@ -6,6 +6,11 @@
              mc:Ignorable="d"
              x:Class="Digiterra.DragDrop.Demo.App">
     <Application.Resources>
-
+        <ResourceDictionary>
+            <OnPlatform x:Key="IonIcons" x:TypeArguments="x:String">
+                <On Platform="Android" Value="Fonts/ionicons.ttf#Ionicons" />
+                <On Platform="iOS" Value="ionicons" />
+            </OnPlatform>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

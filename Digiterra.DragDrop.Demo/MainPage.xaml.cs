@@ -15,7 +15,7 @@ namespace Digiterra.DragDrop.Demo
     [DesignTimeVisible(false)]
     public partial class MainPage : ContentPage
     {
-        Dictionary<DraggableImage, DragInformation> dragDictionary = new Dictionary<DraggableImage, DragInformation>();
+        Dictionary<DraggableFontImage, DragInformation> dragDictionary = new Dictionary<DraggableFontImage, DragInformation>();
 
         public MainPage()
         {
@@ -28,14 +28,24 @@ namespace Digiterra.DragDrop.Demo
        
         void LoadSavedImages()
         {
-            if (App.AppDragDictionary.Any())
+            if (App.customModels.Any())
             {
-                foreach (var item in App.AppDragDictionary)
+                foreach (var item in App.customModels)
                 {
                     TouchEffect touchEffect = new TouchEffect();
                     touchEffect.TouchAction += OnTouchEffectAction;
-                    item.Key.Effects.Add(touchEffect);
-                    absoluteLayout.Children.Add(item.Key);
+                    DraggableFontImage draggableFontImage = new DraggableFontImage()
+                    {
+                        FontFamily = item.DraggableFontImage.FontFamily,
+                        FontSize = item.DraggableFontImage.FontSize,
+                        TextColor = item.DraggableFontImage.TextColor,
+                        Text = item.DraggableFontImage.Text,
+                       
+
+                    };
+                    draggableFontImage.Effects.Add(touchEffect);
+                    
+                    absoluteLayout.Children.Add(draggableFontImage, item.DragInformation.Point);
                 }
             }
           
@@ -44,42 +54,53 @@ namespace Digiterra.DragDrop.Demo
         }
         void OnTouchEffectAction(object sender, TouchEventArgs args)
         {
-            DraggableImage draggableImage = sender as DraggableImage;
+            DraggableFontImage draggableFontImage = sender as DraggableFontImage;
 
             switch (args.Type)
             {
                 case TouchType.Pressed:
                     // Don't allow a second touch on an already touched BoxView
-                    if (!dragDictionary.ContainsKey(draggableImage))
+                    if (!dragDictionary.ContainsKey(draggableFontImage))
                     {
-                        dragDictionary.Add(draggableImage, new DragInformation(args.Id, args.Location));
-                        if (!App.AppDragDictionary.ContainsKey(draggableImage))
+                        dragDictionary.Add(draggableFontImage, new DragInformation(args.Id, args.Location));
+                        if (!App.customModels.Any(r=> r.DraggableFontImage == draggableFontImage))
                         {
-                            App.AppDragDictionary.Add(draggableImage, new DragInformation(args.Id, args.Location));
+                            //App.AppDragDictionary.Add(draggableFontImage, new DragInformation(args.Id, args.Location));
+                            App.customModels.Add(new CustomModel()
+                            {
+                                DraggableFontImage = draggableFontImage,
+                                DragInformation = new DragInformation(args.Id, args.Location)
+                            });
 
                         }
+                        
                         // Set Capture property to true
-                        TouchEffect touchEffect = (TouchEffect)draggableImage.Effects.FirstOrDefault(e => e is TouchEffect);
+                        TouchEffect touchEffect = (TouchEffect)draggableFontImage.Effects.FirstOrDefault(e => e is TouchEffect);
                         touchEffect.Capture = true;
                     }
                     break;
 
                 case TouchType.Moved:
-                    if (dragDictionary.ContainsKey(draggableImage) && dragDictionary[draggableImage].Id == args.Id)
+                    if (dragDictionary.ContainsKey(draggableFontImage) && dragDictionary[draggableFontImage].Id == args.Id)
                     {
-                        Rectangle rect = AbsoluteLayout.GetLayoutBounds(draggableImage);
-                        Point initialLocation = dragDictionary[draggableImage].Point;
+                        Rectangle rect = AbsoluteLayout.GetLayoutBounds(draggableFontImage);
+                        Point initialLocation = dragDictionary[draggableFontImage].Point;
                         rect.X += args.Location.X - initialLocation.X;
                         rect.Y += args.Location.Y - initialLocation.Y;
-                        AbsoluteLayout.SetLayoutBounds(draggableImage, rect);
+                        Console.WriteLine(rect.X);
+                        Console.WriteLine(rect.Y);
+
+                        var s = App.customModels.FirstOrDefault(r => r.DragInformation.Id == args.Id);
+                        s.DragInformation = new DragInformation(args.Id, new Point(rect.X, rect.Y));
+                        AbsoluteLayout.SetLayoutBounds(draggableFontImage, rect);
                     }
                     break;
 
                 case TouchType.Released:
-                    if (dragDictionary.ContainsKey(draggableImage) && dragDictionary[draggableImage].Id == args.Id)
+                    if (dragDictionary.ContainsKey(draggableFontImage) && dragDictionary[draggableFontImage].Id == args.Id)
                     {
                         
-                        dragDictionary.Remove(draggableImage);
+                        dragDictionary.Remove(draggableFontImage);
                     }
                     break;
             }
@@ -87,10 +108,10 @@ namespace Digiterra.DragDrop.Demo
 
         private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
-            var draggableImage = sender as DraggableImage;
+            var draggableImage = sender as DraggableFontImage;
             if (draggableImage != null)
             {
-                var newInstance = new DraggableImage() { Source = draggableImage.Source };
+                var newInstance = new DraggableFontImage() { Text = draggableImage.Text, FontFamily = draggableImage.FontFamily, FontSize = draggableImage.FontSize };
                 TouchEffect touchEffect = new TouchEffect();
                 touchEffect.TouchAction += OnTouchEffectAction;
                 newInstance.Effects.Add(touchEffect);

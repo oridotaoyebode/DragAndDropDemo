@@ -3,13 +3,20 @@ using Digiterra.DragDrop.Demo.Effects;
 using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
+using System.Linq;
 using Xamarin.Forms.Xaml;
 
 namespace Digiterra.DragDrop.Demo
 {
+    public class CustomModel
+    {
+        public DraggableFontImage DraggableFontImage { get; set; }
+        public DragInformation DragInformation { get; set; }
+
+    }
     public partial class App : Application
     {
-        public static Dictionary<DraggableImage, DragInformation> AppDragDictionary = new Dictionary<DraggableImage, DragInformation>();
+        public static List<CustomModel> customModels { get; set; }  = new List<CustomModel>();
         public App()
         {
             InitializeComponent();

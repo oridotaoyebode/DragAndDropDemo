@@ -19,10 +19,10 @@ namespace Digiterra.DragDrop.Demo
         {
             Images = new ObservableCollection<string>()
             {
-                "electricity.png",
-                "wrench.png",
-                "fan.png",
-                "water.png"
+               IonicIconsFont.Earth,
+               IonicIconsFont.IosAlarmOutline,
+               IonicIconsFont.IosBoltOutline,
+               IonicIconsFont.IosBriefcaseOutline
             };
         }
     }
