@@ -40,12 +40,14 @@ namespace Digiterra.DragDrop.Demo
                         FontSize = item.DraggableFontImage.FontSize,
                         TextColor = item.DraggableFontImage.TextColor,
                         Text = item.DraggableFontImage.Text,
+                        
+                        
                        
 
                     };
                     draggableFontImage.Effects.Add(touchEffect);
                     
-                    absoluteLayout.Children.Add(draggableFontImage, item.DragInformation.Point);
+                    absoluteLayout.Children.Add(draggableFontImage);
                 }
             }
           
@@ -90,8 +92,7 @@ namespace Digiterra.DragDrop.Demo
                         Console.WriteLine(rect.X);
                         Console.WriteLine(rect.Y);
 
-                        var s = App.customModels.FirstOrDefault(r => r.DragInformation.Id == args.Id);
-                        s.DragInformation = new DragInformation(args.Id, new Point(rect.X, rect.Y));
+                        
                         AbsoluteLayout.SetLayoutBounds(draggableFontImage, rect);
                     }
                     break;
