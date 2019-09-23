@@ -19,7 +19,7 @@ namespace Digiterra.DragDrop.Demo.iOS
             view = Control == null ? Container : Control;
 
             // Uncomment this line if the UIView does not have touch enabled by default
-            //view.UserInteractionEnabled = true;
+            view.UserInteractionEnabled = true;
 
             // Get access to the TouchEffect class in the .NET Standard library
             Effects.Touch.TouchEffect effect = (Effects.Touch.TouchEffect)Element.Effects.FirstOrDefault(e => e is Effects.Touch.TouchEffect);

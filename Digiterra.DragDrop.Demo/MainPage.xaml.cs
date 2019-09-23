@@ -144,7 +144,7 @@ namespace Digiterra.DragDrop.Demo
             if (draggableImage != null)
             {
                 guidString = Guid.NewGuid().ToString();
-                var newInstance = new DraggableFontImage() { TextColor = draggableImage.TextColor, Text = draggableImage.Text, FontFamily = draggableImage.FontFamily, FontSize = draggableImage.FontSize };
+                var newInstance = new DraggableFontImage() { TextColor = draggableImage.TextColor, Text = draggableImage.Text, FontFamily = draggableImage.FontFamily, FontSize = draggableImage.FontSize, InputTransparent = false };
                 TouchEffect touchEffect = new TouchEffect();
                 touchEffect.TouchAction += OnTouchEffectAction;
                 newInstance.Effects.Add(touchEffect);
