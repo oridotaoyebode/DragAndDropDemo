@@ -129,7 +129,7 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\Digiterra.DragDrop.Demo\Digiterra.DragDrop.Demo.csproj">
-      <Project>{74B23D60-FA33-4E1F-B8EE-3F1A4FB6F741}</Project>
+      <Project>{9ADA06F4-7D49-41E6-918A-14E709E2FDDB}</Project>
       <Name>Digiterra.DragDrop.Demo</Name>
     </ProjectReference>
   </ItemGroup>
@@ -144,5 +144,8 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\fan.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\Fonts\" />
   </ItemGroup>
 </Project>
